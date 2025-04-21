@@ -6,15 +6,13 @@ auto_type = 0
 color_legend = {"match": "34", "none_match": "31", "default": "33"}
 
 #todo
-    #Setting function
-        #step by step mode/auto
-        #colour legend 
-        #speed of auto
+    #step counter: track the iterations
+    #more algorithms
 
 #user control --------------------------------------------------------------------
 def user_control():
     while True:
-        os.system("clear")
+        system_clear()
         print(f"\033[{color_legend['default']};1;4mCLI Algorithm Visualizer\033[0m")
 
         print(f"""
@@ -28,6 +26,11 @@ def user_control():
 
         if user_input == "0":
             list_size = input("Enter list size: ")
+            if not list_size.isdigit():
+                print("Please enter a valid number. ")
+                time.sleep(1)
+                continue
+            
             try:
                 list, target = random_list_generator(list_size = int(list_size))
             except ValueError:
@@ -55,7 +58,7 @@ def user_control():
 
 def settings():
     while True:
-        os.system("clear")
+        system_clear()
         print(f"""
 \033[{color_legend['default']}m[0] \033[0mAuto/Manual Mode
 \033[{color_legend['default']}m[1] \033[0mAuto Speed
@@ -99,6 +102,9 @@ def settings():
     
 
 #utility --------------------------------------------------------------------------------
+def system_clear():
+    os.system("cls" if os.name == "nt" else "clear")
+
 def random_list_generator(list_size = 10):
     random_list = []
     for i in range(list_size):
@@ -114,6 +120,7 @@ def auto_manual(type = 0):
         input("Type any character to continue: ")
 
 def color_leg():
+    system_clear()
     global color_legend
     colors = {
     "0": "30", #black
@@ -136,7 +143,7 @@ def color_leg():
 \033[{colors['6']}m[6] \033[0m Cyan
 \033[{colors['7']}m[7] \033[0m White
       
-\033[1;4mCurrrent setup\033[0m
+\033[1;4mCurrent setup\033[0m
 \033[{color_legend['match']}m[0] \033[0m Match
 \033[{color_legend['none_match']}m[1] \033[0m None match
 \033[{color_legend['default']}m[2] \033[0m Default        
@@ -219,10 +226,10 @@ def linear_search(lst, target):
         
         one_step(lst, idx, target)
         if compare(lst, idx, target):
-            os.system("clear")
+            system_clear()
             return f"\033[{color_legend['match']}mMatch Found\033[0m at index {idx}"
         
-    os.system("clear")
+    system_clear()
     return f"\033[{color_legend['none_match']}mTarget item not found"
 #Visual ---------------------------------------------------------------------------------------
 #Compare elements
@@ -257,12 +264,12 @@ def highlight(item, highlight_idx, highlight = True):
 
 #access index (1 item)
 def one_step(item, idx, target, item_type = "List"):
-    os.system("clear")
+    system_clear()
     print(f"\033[1;4m{item_type}:\033[0m " + highlight(item, idx))
     format_string("Target:", target, newline = False, code = "1;4m")
 #access index (2 item)
 def two_step(item_1, item_2, idx_1, idx_2, item_type = "String", highlight_2 = True):
-    os.system("clear")
+    system_clear()
     print(f"\033[1;4m{item_type}:\033[0m " + highlight(item_1, idx_1))
     print(f"\033[1;4mTarget {item_type}:\033[0m " + highlight(item_2, idx_2, highlight = highlight_2))
 #format string 
