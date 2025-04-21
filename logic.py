@@ -3,6 +3,7 @@ import time
 import random
 auto_speed = 1
 auto_type = 0
+color_legend = {"match": "34", "none_match": "31", "default": "33"}
 
 #todo
     #Setting function
@@ -15,13 +16,13 @@ def user_control():
     valid_input = False
     while not valid_input:
         os.system("clear")
-        print("\033[33;1;4mCLI Algorithm Visualizer\033[0m")
+        print(f"\033[{color_legend["default"]};1;4mCLI Algorithm Visualizer\033[0m")
 
-        print("""
-\033[33m[0] \033[0mLinear Search
-\033[33m[1] \033[0mNaive Pattern Search
-\033[33m[2] \033[0mSettings
-\033[33m[3] \033[0mExit
+        print(f"""
+\033[{color_legend["default"]}m[0] \033[0mLinear Search
+\033[{color_legend["default"]}m[1] \033[0mNaive Pattern Search
+\033[{color_legend["default"]}m[2] \033[0mSettings
+\033[{color_legend["default"]}m[3] \033[0mExit
           """)
         
         user_input = input("Enter input here: ")
@@ -55,22 +56,24 @@ def user_control():
             print("Invalid input, try again!")
 
 def settings():
-    print("""
-\033[33m[0] \033[0mAuto/Manual Mode
-\033[33m[1] \033[0mAuto Speed
-\033[33m[2] \033[0mExit
+    print(f"""
+\033[{color_legend["default"]}m[0] \033[0mAuto/Manual Mode
+\033[{color_legend["default"]}m[1] \033[0mAuto Speed
+\033[{color_legend["default"]}m[2] \033[0mColor Legend
+\033[{color_legend["default"]}m[3] \033[0mExit
     """)
 
     user_input = input("Enter here: ")
 
     if user_input == "0":
-        print("""
-\033[33m[0] \033[0mAuto Mode
-\033[33m[1] \033[0mManual Mode
-\033[33m[2] \033[0mExit
+        print(f"""
+\033[{color_legend["default"]}m[0] \033[0mAuto Mode
+\033[{color_legend["default"]}m[1] \033[0mManual Mode
+\033[{color_legend["default"]}m[2] \033[0mExit
         """)
         user_input_2 = input("Enter here: ")
-        
+        global auto_type
+
         if user_input_2 == "0":
             auto_type = 0
         elif user_input_2 == "1":
@@ -81,7 +84,15 @@ def settings():
     if user_input == "1":
         speed = input("Enter auto speed in seconds: ")
         global auto_speed 
+        try:
+            speed = int(speed)
+        except ValueError:
+            print("Error, you can only use integars as an input.")
+            time.sleep(2)
         auto_speed = speed
+
+    if user_input == "2":
+        color_leg()
 
     else:
         return
@@ -100,6 +111,60 @@ def auto_manual(type = 0):
          time.sleep(auto_speed)   
     else:
         input("Type any character to continue: ")
+
+def color_leg():
+    global color_legend
+    colors = {
+    "0": "30", #black
+    "1": "31", #red
+    "2": "32", #green
+    "3": "33", #yellow
+    "4": "34", #blue
+    "5": "35", #magenta
+    "6": "36", #cyan
+    "7": "37"} #white
+
+    print(f"""
+\033[1;4mColors\033[0m
+\033[{colors["0"]}m[0] \033[0m Black
+\033[{colors["1"]}m[1] \033[0m Red
+\033[{colors["2"]}m[2] \033[0m Green
+\033[{colors["3"]}m[3] \033[0m Yellow
+\033[{colors["4"]}m[4] \033[0m Blue
+\033[{colors["5"]}m[5] \033[0m Magenta
+\033[{colors["6"]}m[6] \033[0m Cyan
+\033[{colors["7"]}m[7] \033[0m White
+      
+\033[1;4mCurrrent setup\033[0m
+\033[{color_legend["match"]}m[0] \033[0m Match
+\033[{color_legend["none_match"]}m[1] \033[0m None match
+\033[{color_legend["default"]}m[2] \033[0m Default        
+
+\033[{color_legend["default"]}m[E] \033[0m Exit setup      
+
+To change your color legend, select the number of the colors you would like to change in the order of the \033[1;4mCurrrent setup\033[0m.
+
+e.g. 1 2 3 ---> match color = red, none match = green & default = yellow
+    """)
+
+    user_input = input("")
+
+    if user_input.lower() == "e":
+        return
+    
+    split_user_input = user_input.split()
+    try:
+        match = colors[split_user_input[0]]
+        none_match = colors[split_user_input[1]]
+        default = colors[split_user_input[2]]
+
+        color_legend["match"] = match
+        color_legend["none_match"] = none_match
+        color_legend["default"] = default
+
+    except KeyError:
+        print("Error: Either the formating or name was wrong, returning to home screen")
+        time.sleep(2.5)
 
 
 #Algorithms--------------------------------------------------------------------------
@@ -140,23 +205,23 @@ def linear_search(lst, target):
         one_step(lst, idx, target)
         if compare(lst, idx, target):
             os.system("clear")
-            return f"\033[34mMatch Found\033[0m at index {idx}"
+            return f"\033[{color_legend["match"]}mMatch Found\033[0m at index {idx}"
         
     os.system("clear")
-    return "\033[31mTarget item not found"
+    return f"\033[{color_legend["none_match"]}mTarget item not found"
 #Visual ---------------------------------------------------------------------------------------
 #Compare elements
 def compare(item, idx, target, item_type = "List"):
     
-    print(f"\n\nComparing \033[33m{item[idx]}\033[0m with target {target}...")
+    print(f"\n\nComparing \033[{color_legend["default"]}m{item[idx]}\033[0m with target {target}...")
     auto_manual(auto_type)
     
     if item[idx] == target:
-        print("\033[34mMatch Found!\033[0m")
+        print(f"\033[{color_legend["match"]}mMatch Found!\033[0m")
         auto_manual(auto_type)
         return True
     else:
-        print("\033[31mDoes Not Match!\033[0m")
+        print(f"\033[{color_legend["none_match"]}mDoes Not Match!\033[0m")
         auto_manual(auto_type)
         return False
     
@@ -171,7 +236,7 @@ def highlight(item, highlight_idx, highlight = True):
     highlight = str(item[highlight_idx]).strip("[]")
     right_side = " ".join(map(str, item[highlight_idx + 1:]))
 
-    text = f"{left_side} \033[33m{highlight} \033[0m{right_side}"
+    text = f"{left_side} \033[{color_legend["default"]}m{highlight} \033[0m{right_side}"
 
     return text
 
@@ -195,7 +260,7 @@ def format_string(msg, var, newline = True, code = ""):
     if code != "":
         code = "\033[" + code
 
-    print(f"{code}{new}{msg}\033[0m \033[33m{var} \033[0m")
+    print(f"{code}{new}{msg}\033[0m \033[{color_legend["default"]}m{var} \033[0m")
 
 #main--------------------------------------------------------------------------
 
