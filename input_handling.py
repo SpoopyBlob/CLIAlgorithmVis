@@ -206,6 +206,9 @@ def navigate_algorithm():
         if user_input.lower() == "e":
             n.Algorithm.clear_list()
             break
+    
+    v.error_message("Invalid Input!")
+    u.auto_manual()
 
 
     
